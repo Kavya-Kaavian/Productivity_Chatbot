@@ -1,4 +1,5 @@
 from fastapi import APIRouter, UploadFile,Query
+from pydantic import BaseModel
 from controller.employee_controller import process_csv_controller
 from controller.retriever_controller import search_controller
 import shutil
@@ -21,9 +22,14 @@ async def upload_csv(file: UploadFile):
 
     return await process_csv_controller(file_path)
 
-@router.get("/search")
-async def search(
-    query: str = Query(...),
-    top_k: int = Query(5),
+
+# Define the request model
+class SearchRequest(BaseModel):
+    query: str
+
+@router.post("/search")
+async def search_endpoint(
+    body: SearchRequest,
+    top_k: int = Query(5)
 ):
-    return await search_controller(query, top_k)
+    return await search_controller(body.query, top_k)
