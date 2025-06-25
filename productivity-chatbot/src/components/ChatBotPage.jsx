@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import Image from '../assets/chatbotimgs.png'
+import Imageinfo from '../assets/paragraph.png'
 import headerImage from '../assets/K3.png'
 import "./ChatBotPage.css";
 import { IoSend } from "react-icons/io5";
@@ -14,28 +15,22 @@ const ChatLayout = () => {
 
  const handleSend = async () => {
   if (input.trim()) {
-    console.log(input); // Print to console
-
-    // Show the user message in chat
+    console.log(input); 
     setMessages([...messages, { from: "user", text: input }]);
 
     try {
-      // Send to backend
       const response = await axios.post("http://127.0.0.1:8000/api/assistant/ask", {
         question: input, 
       });
 
       console.log("Backend response:", response.data);
 
-      // (Optional) Add bot reply to chat
       setMessages((prev) => [...prev, { from: "bot", text: response.data.reply }]);
 
     } catch (error) {
       console.error("Error sending message:", error);
       setMessages((prev) => [...prev, { from: "bot", text: "Error getting response" }]);
     }
-
-    // Clear input field
     setInput("");
   }
 };
@@ -49,7 +44,7 @@ const ChatLayout = () => {
 
       <div className="chat-container">
         <div className="left-panel">
-          <h2 className="user-title">Ask anything related to productivity!</h2>
+          <img src={Imageinfo} alt="user visual" className="side-main-image" />
           <div className="image-area">
             <img src={Image} alt="User visual" className="side-image" />
           </div>
@@ -73,9 +68,7 @@ const ChatLayout = () => {
             />
           <button onClick={handleSend}><IoSend /></button>
           </div>
-        <div className="window-footer">
-    © 2025 K³ Chatbot 
-  </div>
+        <div className="window-footer"> &copy; 2025 K³ Chatbot </div>
         </div>
       </div>
     </>
