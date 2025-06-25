@@ -1,17 +1,9 @@
-import { useState } from 'react'
-
-import './App.css'
+import React from "react";
+import ChatLayout from "./components/ChatBotPage";
+import "./App.css"
 
 function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <p>hi </p>
-      </div>
-    </>
-  )
+  return <ChatLayout />;
 }
 
-export default App
+export default App;
