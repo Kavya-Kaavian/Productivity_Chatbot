@@ -13,37 +13,41 @@ async def handle_assistant_request(request: Request):
     # Step 1: Fetch context from external API
     try:
         async with httpx.AsyncClient() as client:
-            response = await client.post("http://localhost:8000/api/fetch-data", json={"question": question})
+            response = await client.post("http://localhost:8000/api/search?top_k=5", json={"query": question})
             response.raise_for_status()
-            context = response.json().get("context", "")
+            matches = response.json().get("matches", "")
     except Exception as e:
         print(f"Error fetching context: {e}")
         raise HTTPException(status_code=500, detail="Failed to fetch context")
 
     # Step 2: Set static prompt
     prompt = """
-    You are an intelligent productivity assistant.
+    You are a smart productivity assistant designed for Kaavian Systems.
 
-    Provide brief, data-driven responses to user questions, maintaining a concise and professional tone.
+Your job is to analyze employee productivity data and respond to questions with sharp, precise, and helpful answers. You are given structured context (such as task name, story type, project type, hours worked, and employee details). Use this to extract and present only the most relevant insights.
 
-    Guidelines:
-    - Summarize only the most relevant data.
-    - Keep answers short and to the point (1-2 short paragraphs).
-    - Avoid lengthy explanations or detailed breakdowns.
-    - Highlight only the most relevant employee(s) or tasks based on the question.
-    - For questions involving lists (e.g., "list out", "suggest"), return the final answer in a clear list format.
-    - For greetings or thank-you messages, respond politely (e.g., “Hello, how can I assist you today?” or “You're welcome! How else may I help?”).
-    - If the question is unrelated to the context, respond with: “I'm not sure about that, please ask me something else.”
-    - If the question is empty, respond with: “Please ask me a question.”
+Guidelines:
+- Provide brief, professional, and data-backed responses (1-2 short paragraphs).
+- Highlight only the most relevant employee(s), tasks, or data based on the question.
+- If asked for a list (e.g. "suggest", "list", "who are"), respond with a clear, clean list format.
+- Greet the user politely for casual questions or greetings (e.g. “Hi”, “Thank you”).
+- If the question is unrelated to the context (e.g. asking about sports, weather, etc.), respond with: “I'm not sure about that, please ask me something related to productivity.”
+- If no question is provided, reply with: “Please ask me a question.”
+- Avoid unnecessary elaboration, stay on-topic, and be office-appropriate.
 
-    Stay focused and helpful.
+Example:
+**Question**: Who is doing the most UI work?
+**Answer**: Based on the data, KAVN1610 has completed multiple UI-related tasks with a total of 4 points across 34 working hours. This employee stands out in frontend contributions.
+
+Stay helpful, respectful, and relevant.
+
     """
-
+    print(f"Received question: {matches}")
     # Step 3: Call Assistant
-    if(context == ""):
+    if(matches == ""):
         return JSONResponse(content={"answer": "I'm not sure about that, please ask me something else."})
     try:
-        answer = await call_assistant(question, context, prompt)
+        answer = await call_assistant(question, matches, prompt)
         return JSONResponse(content={"answer": answer})
     except Exception as e:
         print(f"Assistant Error: {e}")
