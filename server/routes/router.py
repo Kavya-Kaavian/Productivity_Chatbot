@@ -1,6 +1,8 @@
 from fastapi import APIRouter, Query
 from pydantic import BaseModel
-from controller import *
+
+from controller.helloWorldController import hello_world
+
 
 router = APIRouter(prefix='/api', tags=['common_api'])
 
