@@ -11,6 +11,7 @@ const ChatLayout = () => {
     { from: "bot", text: "Hello! How can I help you?" },
   ]);
   const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const chatBodyRef = useRef(null);
 
@@ -24,9 +25,9 @@ const ChatLayout = () => {
   const trimmedInput = input.trim();
   if (!trimmedInput) return;
 
-  // Add user message first (without delay)
   setMessages((prev) => [...prev, { from: "user", text: trimmedInput }]);
-  setInput(""); // Clear input immediately for smooth UX
+  setInput(""); 
+  setLoading(true); 
 
   try {
     const response = await axios.post("http://127.0.0.1:8000/api/assistant/ask", {
@@ -37,6 +38,8 @@ const ChatLayout = () => {
   } catch (error) {
     console.error("Error sending message:", error);
     setMessages((prev) => [...prev, { from: "bot", text: "Error getting response" }]);
+  } finally {
+    setLoading(false);
   }
 };
 
@@ -62,6 +65,11 @@ const ChatLayout = () => {
                 {msg.text}
               </div>
             ))}
+            {loading && (
+            <div className="message bot loading-bubble">
+                <div className="dot-flashing"></div>
+            </div>
+            )}
           </div>
 
           <div className="chat-footer">

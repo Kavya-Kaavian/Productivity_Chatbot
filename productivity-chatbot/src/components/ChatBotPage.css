@@ -35,17 +35,24 @@
   object-fit: cover;
 }
 
+@keyframes floatAndTilt {
+  0%   { transform: translateY(0px) rotate(0deg); }
+  50%  { transform: translateY(-10px) rotate(2deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
+}
+
+.side-image {
+  animation: floatAndTilt 1s ease-in-out infinite;
+}
+
 /* Right Panel */
 .right-panel {
   width: 75%;
   display: flex;
   flex-direction: column;
   background-color: white;
-
-  /* Remove hard border */
+  overflow: none!important;
   border: none;
-
-  /* Add soft shadow instead */
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.15); 
 }
 
@@ -61,7 +68,6 @@
   border-bottom: 1px solid #cbd5e1;
 }
 
-/* Style for the image inside the header */
 .chat-header .side-image {
   width: 40px;
   height: 40px;
@@ -72,6 +78,7 @@
   transition: transform 0.3s ease;
 }
 
+/* K³ Logo animation */
 @keyframes enhancedPulse {
   0% {
     transform: scale(1) rotate(0deg);
@@ -146,9 +153,9 @@
   border: 1px solid #2563eb;
   outline: none;
   font-size: 14px;
-  margin-bottom: 10%;
   background: white;
   color: #2183f3;
+  margin: 0;
 }
 
 .chat-footer input {
@@ -171,7 +178,7 @@
   background: linear-gradient(to right, #00F0FF, #00D3B7, rgb(9 9 59));
   color: #0f172a;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: bold;
   position: fixed;
   bottom: 0;
   left: 0;
@@ -192,6 +199,7 @@
   justify-content: center;
 }
 
+/* Animation for messages */
 @keyframes fadeInRight {
   from {
     opacity: 0;
@@ -211,6 +219,60 @@
   to {
     opacity: 1;
     transform: translateX(0);
+  }
+}
+
+/* Loading */
+.loading-bubble {
+  background: #d1ebec; 
+  border-radius: 15px;
+  padding: 10px 20px;
+  margin: 10px;
+  max-width: 200px;
+  display: inline-block;
+}
+
+/* Typing Dots Animation */
+.dot-flashing {
+  position: relative;
+  width: 12px;
+  height: 12px;
+  border-radius: 6px;
+  background-color: #00D3B7;
+  animation: dot-flashing 1.3s infinite linear alternate;
+  animation-delay: 0.4s;
+}
+
+.dot-flashing::before,
+.dot-flashing::after {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  width: 12px;
+  height: 12px;
+  border-radius: 6px;
+  background-color: #00D3B7;
+}
+
+.dot-flashing::before {
+  left: -16px;
+  animation: dot-flashing 1.3s infinite linear alternate;
+  animation-delay: 0s;
+}
+
+.dot-flashing::after {
+  left: 16px;
+  animation: dot-flashing 1.3s infinite linear alternate;
+  animation-delay: 0.8s;
+}
+
+@keyframes dot-flashing {
+  0% {
+    background-color: #00D3B7;
+  }
+  50%, 100% {
+    background-color: #00F0FF;
   }
 }
 
