@@ -1,42 +1,45 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
-import Image from '../assets/chatbotimgs.png'
-import headerImage from '../assets/Kings.png'
+import Image from "../assets/chatbotimgs.png";
+import Imageinfo from "../assets/paragraph.png";
+import headerImage from "../assets/K3.png";
 import "./ChatBotPage.css";
 import { IoSend } from "react-icons/io5";
-
 
 const ChatLayout = () => {
   const [messages, setMessages] = useState([
     { from: "bot", text: "Hello! How can I help you?" },
   ]);
   const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
 
- const handleSend = async () => {
-  if (input.trim()) {
-    console.log(input); // Print to console
+  const chatBodyRef = useRef(null);
 
-    // Show the user message in chat
-    setMessages([...messages, { from: "user", text: input }]);
-
-    try {
-      // Send to backend
-      const response = await axios.post("http://127.0.0.1:8000/api/assistant/ask", {
-        question: input, 
-      });
-
-      console.log("Backend response:", response.data);
-
-      // (Optional) Add bot reply to chat
-      setMessages((prev) => [...prev, { from: "bot", text: response.data.reply }]);
-
-    } catch (error) {
-      console.error("Error sending message:", error);
-      setMessages((prev) => [...prev, { from: "bot", text: "Error getting response" }]);
+  useEffect(() => {
+    if (chatBodyRef.current) {
+      chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight;
     }
+  }, [messages]);
 
-    // Clear input field
-    setInput("");
+  const handleSend = async () => {
+  const trimmedInput = input.trim();
+  if (!trimmedInput) return;
+
+  setMessages((prev) => [...prev, { from: "user", text: trimmedInput }]);
+  setInput(""); 
+  setLoading(true); 
+
+  try {
+    const response = await axios.post("http://127.0.0.1:8000/api/assistant/ask", {
+      question: trimmedInput,
+    });
+
+    setMessages((prev) => [...prev, { from: "bot", text: response.data.reply }]);
+  } catch (error) {
+    console.error("Error sending message:", error);
+    setMessages((prev) => [...prev, { from: "bot", text: "Error getting response" }]);
+  } finally {
+    setLoading(false);
   }
 };
 
@@ -49,33 +52,40 @@ const ChatLayout = () => {
 
       <div className="chat-container">
         <div className="left-panel">
-          <h2 className="user-title">Ask anything related to productivity!</h2>
+          <img src={Imageinfo} alt="Info" className="side-main-image" />
           <div className="image-area">
-            <img src={Image} alt="User visual" className="side-image" />
+            <img src={Image} alt="Bot" className="side-image" />
           </div>
         </div>
 
         <div className="right-panel">
-          <div className="chat-body">
+          <div className="chat-body" ref={chatBodyRef}>
             {messages.map((msg, idx) => (
-            <div key={idx} className={`message ${msg.from}`}>
+              <div key={idx} className={`message ${msg.from}`}>
                 {msg.text}
               </div>
             ))}
+            {loading && (
+            <div className="message bot loading-bubble">
+                <div className="dot-flashing"></div>
+            </div>
+            )}
           </div>
+
           <div className="chat-footer">
             <input
               type="text"
               placeholder="Type a message..."
               value={input}
-            onChange={(e) => setInput(e.target.value)}
+              onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleSend()}
             />
-          <button onClick={handleSend}><IoSend /></button>
+            <button onClick={handleSend}>
+              <IoSend />
+            </button>
           </div>
-        <div className="window-footer">
-    © 2025 K³ Chatbot 
-  </div>
+
+          <div className="window-footer">© 2025 K³ Chatbot Created by KKK</div>
         </div>
       </div>
     </>
