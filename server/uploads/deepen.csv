@@ -1,0 +1,11 @@
+Story ID,Task Name,Project Type,Story Type,Point,Woking Hour(s),Status,EmployeeID,Employee Name
+KKK-31,Enable dark mode setting,Project,API,2,16,Done,KAVN1611,Deepan
+KKK-32,Restrict file types in upload form,Project,PR,2,18,Done,KAVN16011,Deepan
+KKK-33,Fix - Order API,poc,DB,1,12,Done,KAVN30411,Deepan
+KKK-34,Block account after failed login,poc,PR,2,12,Done,KAVN44811,Deepan
+KKK-35,Auto-save form on user input,poc,UI,2,17,Done,KAVN59211,Deepan
+KKK-36,Event to trigger push notification,project,DB,2,14,Done,KAVN73611,Deepan
+KKK-37,Update price of existing menu item,project,Mentoring,1,7,Final Review,KAVN88011,Deepan
+KKK-38,Add new menu item to restaurant catalog,project,DB,0.5,0.5,QA,KAVN102411,Deepan
+KKK-39,Create search bar with filters,project,Research,1,7,QA,KAVN116811,Deepan
+KKK-40,Delete discontinued dishes from menu,project,UI,3,18,PR,KAVN131211,Deepan

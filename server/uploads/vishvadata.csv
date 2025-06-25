@@ -1,0 +1,11 @@
+Story ID,Task Name,Project Type,Story Type,Point,Woking Hour(s),Status,EmployeeID,Employee Name
+KKK-41,Add new menu item to restaurant catalog,Project,UI,2,16,Done,KAVN1610,Vishva
+KKK-42,Update price of existing menu item,Project,UI,2,18,Done,KAVN1610,Vishva
+KKK-43,Upload food images to menu items,poc,UI,2,12,Done,KAVN1610,Vishva
+KKK-44,Get Lead Charge API,poc,API,2,12,Done,KAVN1610,Vishva
+KKK-45,Delete Lead Charge,poc,API,2,17,Done,KAVN1610,Vishva
+KKK-46,Event to trigger push notification,project,API,2,14,Done,KAVN1610,Vishva
+KKK-47,Upload food images to menu items,project,API,1,7,Done,KAVN1610,Vishva
+KKK-48,View all customer food orders,project,API,0.5,0.5,Done,KAVN1610,Vishva
+KKK-49,Apply discount code to order,project,API,1,7,QA,KAVN1610,Vishva
+KKK-50,Generate invoice for completed order,project,API,3,18,PR,KAVN1610,Vishva

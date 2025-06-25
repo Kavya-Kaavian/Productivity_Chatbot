@@ -1,0 +1,11 @@
+Story ID,Task Name,Project Type,Story Type,Point,Woking Hour(s),Status,EmployeeID,Employee Name
+KKK-11,Generate invoice for a completed service,Project,API,2,20,Done,KAVN16012,Banu
+KKK-12,Resend invoice to registered email,Project,UI,2,18,Done,KAVN16012,Banu
+KKK-13,Fix - Booking API,poc,UI,2,17,Done,KAVN16012,Banu
+KKK-14,Login Api to get the fcm Id and update,poc,UI,2,18,Done,KAVN16012,Banu
+KKK-15, Fix - Login Api to get the fcm Id and update,poc,UI,2,17,Done,KAVN16012,Banu
+KKK-16,Event to trigger push notification,poc,API,2,25,Done,KAVN16012,Banu
+KKK-17,Customer - Logout API,poc,UI,1,9,Done,KAVN16012,Banu
+KKK-18,Change Password feature,project,UI,0.5,0.5,Final Review,KAVN16012,Banu
+KKK-19,Logout API,project,UI,1,9,QA,KAVN16012,Banu
+KKK-20,Forgot password ,project,UI,3,25,PR,KAVN16012,Banu
