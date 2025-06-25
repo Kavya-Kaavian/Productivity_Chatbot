@@ -1,14 +1,25 @@
+<<<<<<< HEAD
+from fastapi import APIRouter, Query
+from pydantic import BaseModel
+
+from controller.helloWorldController import hello_world
+
+=======
 from fastapi import APIRouter, UploadFile,Query
 from pydantic import BaseModel
 from controller.employee_controller import process_csv_controller
 from controller.retriever_controller import search_controller
 import shutil
 import os
+>>>>>>> 4705b3c242d1911be907d78cc8efbdab5fee923d
 
 router = APIRouter(prefix='/api', tags=['common_api'])
 
 @router.get('/')
 async def get_details():
+<<<<<<< HEAD
+    return await hello_world()
+=======
     return await hello_world()
 
 @router.post("/upload")
@@ -33,3 +44,4 @@ async def search_endpoint(
     top_k: int = Query(5)
 ):
     return await search_controller(body.query, top_k)
+>>>>>>> 4705b3c242d1911be907d78cc8efbdab5fee923d
