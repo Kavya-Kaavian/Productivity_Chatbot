@@ -89,7 +89,7 @@
 
 .message.bot {
   align-self: flex-start;
-  background-color: rgb(205, 204, 204);
+  background-color: #d1ebec;
   word-wrap: break-word;
   color: black;
 }
@@ -190,7 +190,7 @@
 
   .chat-body {
     padding: 12px;
-    margin-bottom: 80%;
+    margin-bottom:80%
   }
 
   .message {
@@ -202,6 +202,7 @@
     flex-direction: row;
     gap:10px;
     padding: 12px;
+    position: fixed;
   }
 
   .chat-footer input {

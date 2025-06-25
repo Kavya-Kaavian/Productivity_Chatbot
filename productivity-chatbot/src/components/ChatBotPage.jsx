@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import Image from '../assets/chatbotimgs.png'
-import headerImage from '../assets/Kings.png'
+import headerImage from '../assets/K3.png'
 import "./ChatBotPage.css";
 import { IoSend } from "react-icons/io5";
 
