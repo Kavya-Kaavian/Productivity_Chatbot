@@ -1,10 +1,10 @@
 import os
 from openai import OpenAI
 import pinecone
+from difflib import SequenceMatcher
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
-PINECONE_REGION = os.getenv("PINECONE_REGION", "us-east-1")
 PINECONE_INDEX_NAME = "productivity"
 EMBEDDING_MODEL = "text-embedding-3-large"
 
@@ -12,7 +12,6 @@ client = OpenAI(api_key=OPENAI_API_KEY)
 pc = pinecone.Pinecone(api_key=PINECONE_API_KEY)
 index = pc.Index(PINECONE_INDEX_NAME)
 
-# === Generate embedding for query ===
 def get_query_embedding(query: str):
     response = client.embeddings.create(
         model=EMBEDDING_MODEL,
@@ -20,39 +19,38 @@ def get_query_embedding(query: str):
     )
     return response.data[0].embedding
 
-# === Metadata filter builder ===
-def build_filter(filter_dict: dict):
-    return {
-        k: {"$eq": v}
-        for k, v in filter_dict.items()
-        if v is not None and v != ""
-    } or None
+def similarity(a: str, b: str) -> float:
+    return SequenceMatcher(None, a.lower(), b.lower()).ratio()
 
-# === Hybrid Search Function ===
-async def search_by_query_service(query: str, top_k: int = 5, filters: dict = None):
+async def search_by_query_service(query: str, top_k: int = 5):
     query_vector = get_query_embedding(query)
-    metadata_filter = build_filter(filters or {})
 
+    # Semantic search
     response = index.query(
         vector=query_vector,
         top_k=top_k,
-        include_metadata=True,
-        filter=metadata_filter
+        include_metadata=True
     )
 
     matches = response.get("matches", [])
 
-    simplified_matches = [
-        {
+    results = []
+    for m in matches:
+        metadata = m.get("metadata", {})
+        text = metadata.get("text", "")
+        sim_score = similarity(query, text)
+
+        results.append({
             "id": m["id"],
-            "score": m["score"],
-            "metadata": m["metadata"]
-        }
-        for m in matches
-    ]
+            "semantic_score": m["score"],
+            "metadata_text_match_score": sim_score,
+            "metadata": metadata
+        })
+
+    # Sort by metadata match score first, then semantic
+    results.sort(key=lambda x: (x["metadata_text_match_score"], x["semantic_score"]), reverse=True)
 
     return {
         "query": query,
-        "filters_used": metadata_filter,
-        "matches": simplified_matches
+        "matches": results
     }
