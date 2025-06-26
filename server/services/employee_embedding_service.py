@@ -52,6 +52,9 @@ async def process_employee_csv_service(file_path: str):
     df = df.dropna(subset=["Story ID", "EmployeeID"])
 
     for idx, row in df.iterrows():
+        # ✅ Normalize the keys of the row to remove trailing spaces
+        row = {k.strip(): v for k, v in row.items()}
+
         story_id = str(row.get("Story ID", f"row{idx}")).strip()
         task = str(row.get("Task Name", "")).strip()
         project_type = str(row.get("Project Type", "")).strip()
@@ -62,6 +65,11 @@ async def process_employee_csv_service(file_path: str):
         employee_id = str(row.get("EmployeeID", "")).strip()
         employee_name = str(row.get("Employee Name", "")).strip()
 
+        #  Debug missing name if needed
+        if not employee_name:
+            print(f"[WARN] Missing employee name for row {idx} | EmployeeID: {employee_id}")
+
+        #  Always store clean text for search accuracy
         text = (
             f"Employee Name: {employee_name} | "
             f"Employee ID: {employee_id} | "
@@ -73,27 +81,25 @@ async def process_employee_csv_service(file_path: str):
             f"Status: {status}"
         )
 
+        # ⛏️ Chunking if necessary
         chunks = chunk_text(text) if count_tokens(text) > CHUNK_SIZE else [text]
 
         for i, chunk in enumerate(chunks):
             chunk_id = f"{employee_id}_{story_id}_{i}" if len(chunks) > 1 else f"{employee_id}_{story_id}"
             embedding = get_embedding(chunk)
-    
-        metadata = {
-            "employee_id": employee_id,
-            "employee_name": employee_name,
-            "story_id": story_id,
-            "task_name": task,
-            "project_type": project_type,
-            "story_type": story_type,
-            "point": point,
-            "hours": hours,
-            "status": status,
-            "chunk_index": i,
-            "text": chunk  # <-- this ensures the chunked or original text is stored
-        }
-
-    store_to_pinecone(chunk_id, embedding, metadata)
-
+            metadata = {
+                "employee_id": employee_id,
+                "employee_name": employee_name,
+                "story_id": story_id,
+                "task_name": task,
+                "project_type": project_type,
+                "story_type": story_type,
+                "point": point,
+                "hours": hours,
+                "status": status,
+                "chunk_index": i,
+                "text": text  #  Include full text in metadata
+            }
+            store_to_pinecone(chunk_id, embedding, metadata)
 
     return {"message": f"{len(df)} records embedded and stored."}
