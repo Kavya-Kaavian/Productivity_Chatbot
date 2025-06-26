@@ -19,8 +19,7 @@ async def upload_csv(file: UploadFile):
 
     with open(file_path, "wb") as f:
         shutil.copyfileobj(file.file, f)
-
-    return await process_csv_controller(file_path)
+    return await process_employee_csv_service(file_path)
 
 
 # Define the request model
