@@ -46,7 +46,7 @@ const ChatLayout = () => {
   return (
     <>
       <div className="chat-header">
-        <img src={headerImage} alt="Header" className="side-image" />
+        <img src={headerImage} alt="Header" className="side-image-head" />
         Productivity Chatbot
       </div>
 
